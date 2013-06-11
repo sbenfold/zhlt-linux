@@ -73,8 +73,9 @@ static FILE*    texfiles[MAX_TEXFILES];
     }
 
 #else // SIZEOF_CHARP != 8, almost certainly 4
-    #define texmap64_store( A ) ( (int) A)
-    #define texmap64_retrieve( A ) ( (char*) A)
+    // [Sim--] Replacing C-style casts with reinterpret_cast to fix compile errors
+    #define texmap64_store( A ) ( reinterpret_cast<int>(A))
+    #define texmap64_retrieve( A ) ( reinterpret_cast<char*>(A))
 #endif // SIZEOF_CHARP
 
 // =====================================================================================
