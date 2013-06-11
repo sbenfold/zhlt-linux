@@ -41,42 +41,65 @@ static lumpinfo_t* lumpinfo = NULL;
 static int      nTexFiles = 0;
 static FILE*    texfiles[MAX_TEXFILES];
 
-// fix for 64 bit machines
-#if SIZEOF_CHARP == 8
-    static char* texmap64[MAX_MAP_BRUSHES];
-    static int   tex_max64=0;
 
-    static inline int texmap64_store(char *texname)
+// TODO: Only needed for 64-bit. Consider replacing with an ifdef checking for 32/64
+static char* texmap64[MAX_MAP_BRUSHES];
+static int   tex_max64=0;
+
+
+
+// 64-bit
+template<int> int texmap64_store(char* texname);
+
+template<> int texmap64_store<8>(char* texname)
+{
+    int curr_tex;
+    ThreadLock();
+    if (tex_max64 >= MAX_MAP_BRUSHES)   // no assert?
     {
-        int curr_tex;
-        ThreadLock();
-        if (tex_max64 >= MAX_MAP_BRUSHES)   // no assert?
-        {
-            printf("MAX_MAP_BRUSHES exceeded!\n");
-            exit(-1);
-        }
-        curr_tex = tex_max64;
-        texmap64[tex_max64] = texname;
-        tex_max64++;
-        ThreadUnlock();
-        return curr_tex;
+        printf("MAX_MAP_BRUSHES exceeded!\n");
+        exit(-1);
     }
+    curr_tex = tex_max64;
+    texmap64[tex_max64] = texname;
+    tex_max64++;
+    ThreadUnlock();
+    return curr_tex;
+}
 
-    static inline char* texmap64_retrieve( int index)
+template<> int texmap64_store<4>(char* texname)
+{
+    return reinterpret_cast<int>(texname);
+}
+
+inline int texmap64_store(char* texname)
+{
+    return texmap64_store<sizeof(char*)>(texname);
+}
+
+
+// 32-bit
+template<int> char* texmap64_retrieve(int index);
+
+template<> char* texmap64_retrieve<8>(int index)
+{
+    if(index > tex_max64)
     {
-        if(index > tex_max64)
-        {
-            printf("retrieving bogus texture index %d\n", index);
-            exit(-1);
-        }
-        return texmap64[index];
+        printf("retrieving bogus texture index %d\n", index);
+        exit(-1);
     }
+    return texmap64[index];
+}
 
-#else // SIZEOF_CHARP != 8, almost certainly 4
-    // [Sim--] Replacing C-style casts with reinterpret_cast to fix compile errors
-    #define texmap64_store( A ) ( reinterpret_cast<int>(A))
-    #define texmap64_retrieve( A ) ( reinterpret_cast<char*>(A))
-#endif // SIZEOF_CHARP
+template<> char* texmap64_retrieve<4>(int index)
+{
+    return reinterpret_cast<char*>(index);
+}
+
+inline char* texmap64_retrieve(int index)
+{
+    return texmap64_retrieve<sizeof(char*)>(index);
+}
 
 // =====================================================================================
 //  CleanupName
