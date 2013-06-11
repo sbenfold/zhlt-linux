@@ -247,14 +247,14 @@ void            WriteLog(const char* const message)
 #ifndef SYSTEM_WIN32
     if (CompileLog)
     {
-        fprintf(CompileLog, message);
+        fprintf(CompileLog, "%s", message);
         fflush(CompileLog);
     }
 #else
     Safe_WriteLog(message);
 #endif
 
-    fprintf(stdout, message);
+    fprintf(stdout, "%s", message);
     fflush(stdout);
 }
 

@@ -1,5 +1,7 @@
 #include "qrad.h"
 
+#include <algorithm>
+
 edgeshare_t     g_edgeshare[MAX_MAP_EDGES];
 vec3_t          g_face_centroids[MAX_MAP_EDGES];
 bool            g_sky_lighting_fix = DEFAULT_SKY_LIGHTING_FIX;
@@ -628,7 +630,7 @@ static void     CalcPoints(lightinfo_t* l)
             {
                 // Pull the sample points towards the facemid if visibility is blocked
                 // and the facemid is inside the world
-                int             nudge_divisor = max(max(w, h), 4);
+                int             nudge_divisor = std::max(std::max(w, h), 4);
                 int             max_nudge = nudge_divisor + 1;
                 bool            nudge_succeeded = false;
 
@@ -777,10 +779,10 @@ static void     CalcPoints(lightinfo_t* l)
             {
                 if (!*pLuxelFlags)
                 {
-                    int             x_min = max(0, s - 1);
-                    int             x_max = min(w, s + 1);
-                    int             y_min = max(0, t - 1);
-                    int             y_max = min(t, t + 1);
+                    int             x_min = std::max(0, s - 1);
+                    int             x_max = std::min(w, s + 1);
+                    int             y_min = std::max(0, t - 1);
+                    int             y_max = std::min(t, t + 1);
 
                     int             x, y;
 
@@ -1177,7 +1179,7 @@ void            CreateDirectLights()
 
         if (dl->type != emit_skylight)
         {
-            l1 = max(dl->intensity[0], max(dl->intensity[1], dl->intensity[2]));
+            l1 = std::max(dl->intensity[0], std::max(dl->intensity[1], dl->intensity[2]));
             l1 = l1 * l1 / 10;
 
             dl->intensity[0] *= l1;
@@ -1294,7 +1296,7 @@ static void     GatherSampleLight(const int input_facenum, const vec3_t pos, con
 					else
 					{
 						VectorSubtract(l->origin,pos,delta);
-						dist = min(1,VectorNormalize(delta)); //VectorNormalize returns old length
+						dist = std::min(1,VectorNormalize(delta)); //VectorNormalize returns old length
 						dot = DotProduct(delta,normal);
 
 						if(dot <= LIGHT_EPSILON) { continue; } //behind surface

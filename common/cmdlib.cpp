@@ -21,6 +21,8 @@
 #endif
 #endif
 
+#include <algorithm>
+
 #define PATHSEPARATOR(c) ((c) == '\\' || (c) == '/')
 
 /*
@@ -128,7 +130,7 @@ inline void getFilePositions(char* path, int* extension_position, int* directory
 	else
 	{ *extension_position = ptr - path; }
 
-	ptr = max(strrchr(path,'/'),strrchr(path,'\\'));
+	ptr = std::max(strrchr(path,'/'),strrchr(path,'\\'));
 	if(ptr == 0)
 	{ *directory_position = -1; }
 	else

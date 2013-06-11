@@ -2,6 +2,8 @@
 
 #include "vis.h"
 
+#include <algorithm>
+
 // =====================================================================================
 //  CheckStack
 // =====================================================================================
@@ -1100,7 +1102,7 @@ static float		CalcSplitsAndDotProducts(plane_t *org_split_plane, leaf_t *leaf1, 
 		{
 			dist = DotProduct(wind.m_Points[i], org_split_plane->normal) - org_split_plane->dist;
 
-			min_dist = min(min_dist, dist);
+			min_dist = std::min(min_dist, dist);
 		}
 
 		return min_dist;
@@ -1142,7 +1144,7 @@ static float		CalcSplitsAndDotProducts(plane_t *org_split_plane, leaf_t *leaf1, 
 	{
 		dist = DotProduct(i_points[i], org_split_plane->normal) - org_split_plane->dist;
 
-		min_dist = min(min_dist, dist);
+		min_dist = std::min(min_dist, dist);
 	}
 
 	if(splits)

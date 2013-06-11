@@ -13,6 +13,8 @@
 #define	BOGUS_RANGE	10000.0
 #define ON_EPSILON 0.01
 
+#include <algorithm>
+
 //
 // Winding Public Methods
 //
@@ -1071,7 +1073,7 @@ void            Winding::resize(UINT32 newsize)
     newsize = (newsize + 3) & ~3;   // groups of 4
 
     vec3_t* newpoints = new vec3_t[newsize];
-    m_NumPoints = min(newsize, m_NumPoints);
+    m_NumPoints = std::min(newsize, m_NumPoints);
     memcpy(newpoints, m_Points, m_NumPoints);
     delete[] m_Points;
     m_Points = newpoints;

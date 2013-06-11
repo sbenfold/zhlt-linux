@@ -6,7 +6,7 @@
 // PointInEdge - base for all boundary checks
 //===============================================
 
-inline bool PointInEdge(const vec_t* const point, const vec_t* const p1, const vec_t* const p2, const vec_t* const normal)
+bool PointInEdge(const vec_t* const point, const vec_t* const p1, const vec_t* const p2, const vec_t* const normal)
 {
 	vec3_t edge, temp, temp2; //don't make static because we need multithread support
 	VectorSubtract(p1,p2,edge);
@@ -20,7 +20,7 @@ inline bool PointInEdge(const vec_t* const point, const vec_t* const p1, const v
 // PointInWall - check a lerpWall_t boundary
 //===============================================
 
-inline bool PointInWall(const lerpWall_t* const wall, const vec_t* const point)
+bool PointInWall(const lerpWall_t* const wall, const vec_t* const point)
 {
 	for(int counter = 0; counter < NUM_LERP_POINTS; counter++)
 	{
@@ -34,7 +34,7 @@ inline bool PointInWall(const lerpWall_t* const wall, const vec_t* const point)
 // PointInWall - check a Winding boundary
 //===============================================
 
-inline bool PointInWinding(const Winding* const W, const dplane_t* const plane, const vec_t* const point)
+bool PointInWinding(const Winding* const W, const dplane_t* const plane, const vec_t* const point)
 {
 	//reverse direction of points because plane input is 180 degrees from desired normal
 	for(size_t counter = 0; counter < W->m_NumPoints-1; counter++)
@@ -49,7 +49,7 @@ inline bool PointInWinding(const Winding* const W, const dplane_t* const plane, 
 // PointInTri - check a boundary defined by 3 points
 //==================================================
 
-inline bool PointInTri(const vec_t* const point, const dplane_t* const plane, const vec_t* const p1, const vec_t* const p2, const vec_t* const p3)
+bool PointInTri(const vec_t* const point, const dplane_t* const plane, const vec_t* const p1, const vec_t* const p2, const vec_t* const p3)
 {
 	return (PointInEdge(point,p1,p2,plane->normal) && PointInEdge(point,p2,p3,plane->normal) && PointInEdge(point,p3,p1,plane->normal));
 }
@@ -58,7 +58,7 @@ inline bool PointInTri(const vec_t* const point, const dplane_t* const plane, co
 // LineSegmentIntersectsBounds - does the line pass through the box?
 //==================================================
 
-inline bool LineSegmentIntersectsBounds(const vec_t* const p1, const vec_t* const p2, const vec3_t& mins, const vec3_t& maxs)
+bool LineSegmentIntersectsBounds(const vec_t* const p1, const vec_t* const p2, const vec3_t& mins, const vec3_t& maxs)
 {
 	vec_t tNear = -999999999;
 	vec_t tFar  =  999999999;
@@ -111,7 +111,7 @@ inline bool LineSegmentIntersectsBounds(const vec_t* const p1, const vec_t* cons
 // LineSegmentIntersectsFace - does the face block the segment?
 //==================================================
 
-inline bool LineSegmentIntersectsFace(const vec_t* const p1, const vec_t* const p2, vec3_t& point_out, const int index)
+bool LineSegmentIntersectsFace(const vec_t* const p1, const vec_t* const p2, vec3_t& point_out, const int index)
 {
 	if(LineSegmentIntersectsBounds(p1,p2,g_opaque_face_list[index].mins,g_opaque_face_list[index].maxs))
 	{
@@ -131,7 +131,7 @@ inline bool LineSegmentIntersectsFace(const vec_t* const p1, const vec_t* const 
 // point in point parameter if it exists
 //==================================================
 
-inline bool LineSegmentIntersectsPlane(const dplane_t& plane, const vec_t* const p1, const vec_t* const p2, vec3_t& point)
+bool LineSegmentIntersectsPlane(const dplane_t& plane, const vec_t* const p1, const vec_t* const p2, vec3_t& point)
 {
 	vec3_t line;
 	VectorSubtract(p2,p1,line);
@@ -156,7 +156,7 @@ inline bool LineSegmentIntersectsPlane(const dplane_t& plane, const vec_t* const
 // PlaneFromPoints
 //==================================================
 
-inline void PlaneFromPoints(const vec_t* const p1, const vec_t* const p2, const vec_t* const p3, dplane_t* plane)
+void PlaneFromPoints(const vec_t* const p1, const vec_t* const p2, const vec_t* const p3, dplane_t* plane)
 {
 	vec3_t	temp, temp2;
 	VectorSubtract(p3,p2,temp);
@@ -170,7 +170,7 @@ inline void PlaneFromPoints(const vec_t* const p1, const vec_t* const p2, const 
 // SnapToPlane
 //==================================================
 
-inline void SnapToPlane(const dplane_t* const plane, vec_t* const point, const vec_t offset)
+void SnapToPlane(const dplane_t* const plane, vec_t* const point, const vec_t offset)
 {
 	vec_t scale = (plane->dist + offset);
 	scale -= DotProduct(plane->normal,point);
