@@ -48,7 +48,6 @@ static int   tex_max64=0;
 
 
 
-// 64-bit
 template<int> int texmap64_store(char* texname);
 
 template<> int texmap64_store<8>(char* texname)
@@ -74,11 +73,10 @@ template<> int texmap64_store<4>(char* texname)
 
 inline int texmap64_store(char* texname)
 {
-    return texmap64_store<sizeof(char*)>(texname);
+    return texmap64_store<sizeof(size_t)>(texname);
 }
 
 
-// 32-bit
 template<int> char* texmap64_retrieve(int index);
 
 template<> char* texmap64_retrieve<8>(int index)
@@ -98,7 +96,7 @@ template<> char* texmap64_retrieve<4>(int index)
 
 inline char* texmap64_retrieve(int index)
 {
-    return texmap64_retrieve<sizeof(char*)>(index);
+    return texmap64_retrieve<sizeof(size_t)>(index);
 }
 
 // =====================================================================================
