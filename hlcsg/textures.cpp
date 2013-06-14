@@ -72,9 +72,11 @@ static FILE*    texfiles[MAX_TEXFILES];
         return texmap64[index];
     }
 
-#else // SIZEOF_CHARP != 8, almost certainly 4
+#elif SIZEOF_CHARP == 4
     #define texmap64_store( A ) ( (int) A)
     #define texmap64_retrieve( A ) ( (char*) A)
+#else
+	#error "SIZEOF_CHARP is undefined"
 #endif // SIZEOF_CHARP
 
 // =====================================================================================

@@ -499,7 +499,7 @@ q_threadfunction q_entry;
 
 static void*    CDECL ThreadEntryStub(void* pParam)
 {
-    q_entry((int)pParam);
+    q_entry(reinterpret_cast<intptr_t>(pParam));
     return NULL;
 }
 

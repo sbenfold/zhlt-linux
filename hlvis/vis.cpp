@@ -213,14 +213,14 @@ static void     PlaneFromWinding(winding_t* w, plane_t* plane)
 static winding_t* NewWinding(const int points)
 {
     winding_t*      w;
-    int             size;
+    size_t          size;
 
     if (points > MAX_POINTS_ON_WINDING)
     {
         Error("NewWinding: %i points > MAX_POINTS_ON_WINDING", points);
     }
 
-    size = (int)((winding_t*)0)->points[points];
+    size = reinterpret_cast<size_t>(((winding_t*)0)->points[points]);
     w = (winding_t*)calloc(1, size);
 
     return w;
